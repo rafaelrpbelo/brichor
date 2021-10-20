@@ -9,3 +9,10 @@ services:
     command: yarn run dev
     ports:
       - '3000:3000'
+
+  stripe_cli:
+    image: stripe/stripe-cli:latest
+    command: listen --forward-to=http://web:3000/api/webhooks
+    environment:
+      - STRIPE_API_KEY=your-stripe-restricted-key
+      - STRIPE_DEVICE_NAME=your-stripe-device-name
