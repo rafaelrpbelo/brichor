@@ -41,11 +41,16 @@ export default function Post({ post: { title, content, updatedAt } }: PostProps)
 
 export const getServerSideProps: GetServerSideProps = async ({ req, params }) => {
   const { slug } = params
+  const session = await getSession({ req });
 
-  //const session = await getSession()
-  //if (!session) {
-  //  // User should be logged in and with subscription active
-  //}
+  if (!session?.activeSubscription) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      }
+    }
+  }
 
   const prismic = getPrismicClient(req)
   const response = await prismic.getByUID("po", String(slug), {})
